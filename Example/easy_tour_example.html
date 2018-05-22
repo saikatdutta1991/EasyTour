@@ -8,7 +8,11 @@
 
 <link href="../EasyTour.css" rel="stylesheet">
 <script src="../EasyTour.js"></script>
-
+<style>
+    .dropdown-menu {
+        z-index: auto !important;
+    }
+</style>
 
 
 <body>
@@ -71,8 +75,7 @@
                         <p class="navbar-text">Already have an account?</p>
                     </li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle etour-example" data-toggle="dropdown" etour-event="click" etour-step="2" etour-title="Login menu"
-                            etour-desc="This is login menu">
+                        <a href="#" class="dropdown-toggle etour-example" data-toggle="dropdown" etour-step="2" etour-title="Login menu" etour-desc="This is login menu">
                             <b>Login</b>
                             <span class="caret"></span>
                         </a>
@@ -81,7 +84,8 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         Login via
-                                        <div class="social-buttons etour-example" etour-step="3" etour-title="Login menu" etour-desc="This is login menu">
+                                        <div class="social-buttons etour-example" etour-click-event-selector="[etour-step='2']" etour-step="3" etour-title="Login menu"
+                                            etour-desc="This is login menu">
                                             <a href="#" class="btn btn-fb">
                                                 <i class="fa fa-facebook"></i> Facebook</a>
                                             <a href="#" class="btn btn-tw">
@@ -127,6 +131,7 @@
         <!-- /.container-fluid -->
     </nav>
 
+
     <div id="login-overlay" class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -157,7 +162,8 @@
                                     </label>
                                     <p class="help-block">(if this is a private computer)</p>
                                 </div>
-                                <button type="submit" value="login" name="submit" class="btn btn-success btn-block">Login</button>
+                                <button type="submit" value="login" name="submit" class="btn btn-success btn-block etour-example" etour-step="4" etour-title="Login button"
+                                    etour-desc="Here you can login">Login</button>
                             </form>
                         </div>
                     </div>

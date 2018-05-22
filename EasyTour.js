@@ -16,7 +16,7 @@ let EasyTour = function (selector) {
         item.step = parseInt(item.elem.getAttribute("etour-step"))
         item.title = item.elem.getAttribute("etour-title")
         item.desc = item.elem.getAttribute("etour-desc")
-        item.event = item.elem.getAttribute("etour-event")
+        item.click_event_selector = item.elem.getAttribute("etour-click-event-selector")
 
         this.stepItems.push(item)
     })
@@ -83,14 +83,6 @@ EasyTour.removeClassToElement = function (element, classname) {
 
 EasyTour.showEasyTour = function (item) {
 
-    if (item.event !== null) {
-        console.log(item.elem)
-        //item.elem.dispatchEvent(new Event("click"))
-        setTimeout(() => {
-            item.elem.click()
-        }, 0);
-    }
-
     //make visible tour box
     EasyTour.addClass('.easytour', 'easytour-visible')
 
@@ -104,6 +96,13 @@ EasyTour.showEasyTour = function (item) {
     let boxElemLeftStyle = item.elem.getBoundingClientRect().right - boxElem.getBoundingClientRect().width
     boxElemLeftStyle = boxElemLeftStyle < 0 ? boxArrowElem.getBoundingClientRect().width + 10 : boxElemLeftStyle
     let boxElemToptStyle = item.elem.getBoundingClientRect().height + item.elem.getBoundingClientRect().top + 15
+    /* console.log('boxElemToptStyle', boxElemToptStyle)
+    console.log('itemelem', item.elem.getBoundingClientRect()) */
+
+    if (boxElemToptStyle + boxElem.getBoundingClientRect().height > window.innerHeight) {
+        boxElemToptStyle = boxElemToptStyle - boxElem.getBoundingClientRect().height - item.elem.getBoundingClientRect().height - 20
+    }
+
 
     boxElem.style.left = boxElemLeftStyle + 'px'
     boxElem.style.top = boxElemToptStyle + 'px'
@@ -138,12 +137,51 @@ EasyTour.prototype.stepsInit = function () {
     this.nextStep = this.findStepItem(this.currentStep + 1) === undefined ? -1 : this.currentStep + 1
 }
 
+EasyTour.inViewport = function (el) {
+
+    //special bonus for those using jQuery
+    if (typeof jQuery === "function" && el instanceof jQuery) {
+        el = el[0];
+    }
+
+    var rect = el.getBoundingClientRect();
+
+    return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /*or $(window).height() */
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
+    );
+
+}
+
 
 EasyTour.prototype.startTour = function () {
     if (this.currentStep === -1) {
         this.stepsInit()
     }
-    EasyTour.showEasyTour(this.findStepItem(this.currentStep))
+
+    let item = this.findStepItem(this.currentStep);
+
+
+    //console.log('item.click_event_selector', item.click_event_selector)
+    setTimeout(() => {
+
+        if (item.click_event_selector !== null) {
+            document.querySelector(item.click_event_selector).click()
+        }
+
+        console.log('inview port', EasyTour.inViewport(item.elem))
+        if (!EasyTour.inViewport(item.elem)) {
+            item.elem.scrollIntoView();
+        } else {
+            item.elem.scrollIntoView(false);
+        }
+        EasyTour.showEasyTour(item)
+
+    }, 0);
+
+
 }
 
 EasyTour.prototype.stopTour = function () {
