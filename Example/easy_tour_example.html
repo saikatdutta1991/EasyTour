@@ -200,7 +200,9 @@
     <script>
         let easyTour = null
         window.onload = function () {
-            easyTour = new EasyTour('.etour-example')
+            easyTour = new EasyTour('.etour-example', function (step) {
+                console.log(step)
+            })
             easyTour.startTour()
         }
     </script>

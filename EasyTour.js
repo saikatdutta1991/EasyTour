@@ -1,6 +1,7 @@
 
-let EasyTour = function (selector) {
+let EasyTour = function (selector, stepCallback = null) {
 
+    this.stepCallback = stepCallback
     //easy tour selector
     this.selector = selector
 
@@ -171,13 +172,16 @@ EasyTour.prototype.startTour = function () {
             document.querySelector(item.click_event_selector).click()
         }
 
-        console.log('inview port', EasyTour.inViewport(item.elem))
+        //console.log('inview port', EasyTour.inViewport(item.elem))
         if (!EasyTour.inViewport(item.elem)) {
             item.elem.scrollIntoView();
         } else {
             item.elem.scrollIntoView(false);
         }
         EasyTour.showEasyTour(item)
+
+
+        this.stepCallback.apply(this, [item]);
 
     }, 0);
 
@@ -190,7 +194,7 @@ EasyTour.prototype.stopTour = function () {
 
     //remove each item easytour-highlight
     if (this.currentStep !== -1) {
-        console.log(this.currentStep)
+        //console.log(this.currentStep)
         EasyTour.removeClassToElement(this.findStepItem(this.currentStep).elem, 'easytour-highlight')
     }
 
